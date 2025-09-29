@@ -1,0 +1,505 @@
+import React, { useState, useEffect } from 'react';
+import { Menu, X, Phone, Mail, MapPin, Award, Users, Shield, Star, Send } from 'lucide-react';
+
+// SEO компонент для добавления meta-тегов
+const SEO = () => {
+  const title = "KITCHEN KING | Кухни на заказ в Чебоксарах";
+  const description = "Изготовление кухонных гарнитуров на заказ в Чебоксарах. Индивидуальный дизайн, бесплатный замер, 5 лет гарантии. Адрес: ул. Складской проезд, д.43. Тел: +7 (917) 067-20-87";
+  const url = "https://kitchen-king.ru";
+  const imageUrl = "https://placehold.co/1200x630/f5f0e6/8b7355?text=KITCHEN+KING";
+
+  useEffect(() => {
+    // Обновляем title
+    document.title = title;
+    
+    // Удаляем существующие meta-теги
+    const existingTags = document.querySelectorAll('meta[name="description"], meta[property="og:title"], meta[property="og:description"], meta[property="og:image"], meta[property="og:url"], meta[name="twitter:title"], meta[name="twitter:description"], meta[name="twitter:image"]');
+    existingTags.forEach(tag => tag.remove());
+    
+    // Создаем и добавляем новые meta-теги
+    const metaTags = [
+      { name: 'description', content: description },
+      { property: 'og:title', content: title },
+      { property: 'og:description', content: description },
+      { property: 'og:image', content: imageUrl },
+      { property: 'og:url', content: url },
+      { property: 'og:type', content: 'website' },
+      { name: 'twitter:title', content: title },
+      { name: 'twitter:description', content: description },
+      { name: 'twitter:image', content: imageUrl },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'keywords', content: 'кухни на заказ, кухонные гарнитуры, изготовление кухонь, кухни Чебоксары, мебель на заказ, корпусная мебель, кухни под заказ, дизайн кухни, кухни недорого, кухни с гарантией' },
+      { name: 'robots', content: 'index, follow' },
+      { name: 'author', content: 'KITCHEN KING' },
+      { name: 'geo.region', content: 'RU-CHU' },
+      { name: 'geo.placename', content: 'Чебоксары' },
+      { name: 'geo.position', content: '56.129099;47.250667' },
+      { name: 'ICBM', content: '56.129099, 47.250667' }
+    ];
+
+    metaTags.forEach(tag => {
+      const meta = document.createElement('meta');
+      if (tag.property) {
+        meta.setAttribute('property', tag.property);
+      } else {
+        meta.setAttribute('name', tag.name);
+      }
+      meta.setAttribute('content', tag.content);
+      document.head.appendChild(meta);
+    });
+
+    // Добавляем structured data (JSON-LD)
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "KITCHEN KING",
+      "image": imageUrl,
+      "url": url,
+      "telephone": "+79170672087",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Складской проезд, 43",
+        "addressLocality": "Чебоксары",
+        "postalCode": "428000",
+        "addressCountry": "RU"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 56.129099,
+        "longitude": 47.250667
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+          "opens": "09:00",
+          "closes": "20:00"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Saturday", "Sunday"],
+          "opens": "10:00",
+          "closes": "18:00"
+        }
+      ],
+      "priceRange": "$$",
+      "servesCuisine": "Кухонная мебель на заказ",
+      "sameAs": []
+    });
+    document.head.appendChild(script);
+
+    return () => {
+      // Cleanup
+      script.remove();
+    };
+  }, []);
+
+  return null;
+};
+
+const App = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['home', 'services', 'portfolio', 'contact'];
+      const scrollPosition = window.scrollY + 100;
+
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const { offsetTop, offsetHeight } = element;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      setIsMenuOpen(false);
+    }
+  };
+
+  const services = [
+    {
+      icon: <Award className="w-8 h-8" />,
+      title: "Индивидуальный дизайн",
+      description: "Создаем уникальный проект под ваше пространство и стиль жизни в Чебоксарах"
+    },
+    {
+      icon: <Users className="w-8 h-8" />,
+      title: "Бесплатная консультация",
+      description: "Профессиональный замер и консультация без обязательств по Чувашии"
+    },
+    {
+      icon: <Shield className="w-8 h-8" />,
+      title: "Гарантия качества",
+      description: "5 лет гарантии на всю корпусную мебель и фурнитуру"
+    }
+  ];
+
+  const portfolioItems = [
+    {
+      id: 1,
+      title: "Современная классика",
+      description: "Бежево-золотая кухня с островом для просторной квартиры в Чебоксарах",
+      image: "https://placehold.co/600x400/f5f0e6/8b7355?text=Classic+Kitchen"
+    },
+    {
+      id: 2,
+      title: "Скандинавский минимализм",
+      description: "Светлая кухня с натуральным деревом для уютного дома",
+      image: "https://placehold.co/600x400/e8e4d9/5d4037?text=Scandinavian"
+    },
+    {
+      id: 3,
+      title: "Лофт индустриал",
+      description: "Темная кухня с металлическими элементами для современной квартиры",
+      image: "https://placehold.co/600x400/2c2c2c/e0e0e0?text=Loft+Kitchen"
+    },
+    {
+      id: 4,
+      title: "Прованс уют",
+      description: "Пастельная кухня с цветочными мотивами для загородного дома",
+      image: "https://placehold.co/600x400/e6f3f0/4a7c59?text=Provence+Style"
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-white to-amber-100">
+      <SEO />
+      
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-sm z-50 shadow-sm" aria-label="Основная навигация">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg" aria-hidden="true"></div>
+              <span className="text-xl font-bold text-gray-800">KITCHEN<span className="text-amber-600">KING</span></span>
+            </div>
+            
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex space-x-8">
+              {['home', 'services', 'portfolio', 'contact'].map((section) => (
+                <button
+                  key={section}
+                  onClick={() => scrollToSection(section)}
+                  className={`capitalize transition-colors duration-200 font-medium ${
+                    activeSection === section 
+                      ? 'text-amber-600' 
+                      : 'text-gray-600 hover:text-amber-600'
+                  }`}
+                  aria-current={activeSection === section ? 'page' : undefined}
+                >
+                  {section === 'home' ? 'Главная' : 
+                   section === 'services' ? 'Услуги' : 
+                   section === 'portfolio' ? 'Портфолио' : 'Контакты'}
+                </button>
+              ))}
+            </div>
+
+            {/* Mobile menu button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden p-2 rounded-md text-gray-600 hover:text-amber-600"
+              aria-label={isMenuOpen ? "Закрыть меню" : "Открыть меню"}
+            >
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white border-t" role="dialog">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              {['home', 'services', 'portfolio', 'contact'].map((section) => (
+                <button
+                  key={section}
+                  onClick={() => scrollToSection(section)}
+                  className="block px-3 py-2 text-base font-medium text-gray-600 hover:text-amber-600 capitalize w-full text-left"
+                >
+                  {section === 'home' ? 'Главная' : 
+                   section === 'services' ? 'Услуги' : 
+                   section === 'portfolio' ? 'Портфолио' : 'Контакты'}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </nav>
+
+      {/* Hero Section */}
+      <section id="home" className="pt-16 min-h-screen flex items-center" aria-labelledby="home-heading">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <h1 id="home-heading" className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 leading-tight">
+                  Кухни на заказ в
+                  <span className="block text-amber-600">Чебоксарах</span>
+                </h1>
+                <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
+                  Индивидуальные кухонные гарнитуры на заказ в Чебоксарах. Бесплатный замер, 5 лет гарантии, доставка и сборка по всей Чувашии.
+                </p>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button 
+                  onClick={() => scrollToSection('contact')}
+                  className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 md:px-8 md:py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+                >
+                  Заказать консультацию
+                </button>
+                <button 
+                  onClick={() => scrollToSection('portfolio')}
+                  className="border-2 border-amber-600 text-amber-600 hover:bg-amber-600 hover:text-white px-6 py-3 md:px-8 md:py-4 rounded-lg font-semibold text-lg transition-all duration-300"
+                >
+                  Посмотреть работы
+                </button>
+              </div>
+
+              <div className="flex items-center space-x-6 pt-4 text-sm md:text-base">
+                <div className="text-center">
+                  <div className="text-xl md:text-2xl font-bold text-gray-800">500+</div>
+                  <div className="text-gray-600">реализованных проектов</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-xl md:text-2xl font-bold text-gray-800">5 лет</div>
+                  <div className="text-gray-600">гарантии на мебель</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-xl md:text-2xl font-bold text-gray-800">Чебоксары</div>
+                  <div className="text-gray-600">и вся Чувашия</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="relative">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                <img 
+                  src="https://placehold.co/600x700/f5f0e6/8b7355?text=Premium+Kitchen" 
+                  alt="Премиальная кухня на заказ в Чебоксарах от KITCHEN KING" 
+                  className="w-full h-auto object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+              </div>
+              <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-lg">
+                <div className="flex items-center space-x-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 md:w-5 md:h-5 fill-amber-400 text-amber-400" />
+                  ))}
+                  <span className="font-semibold text-gray-800">4.9/5</span>
+                </div>
+                <p className="text-gray-600 text-xs md:text-sm">Отзывы клиентов из Чебоксар</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section id="services" className="py-16 md:py-20 bg-white/50" aria-labelledby="services-heading">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 id="services-heading" className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Наши услуги в Чебоксарах</h2>
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+              Полный цикл создания кухонной мебели на заказ — от замера до установки в Чебоксарах и Чувашской Республике
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8">
+            {services.map((service, index) => (
+              <div 
+                key={index}
+                className="bg-white p-6 md:p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+              >
+                <div className="w-12 h-12 md:w-16 md:h-16 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600 mb-4 md:mb-6">
+                  {service.icon}
+                </div>
+                <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-3 md:mb-4">{service.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{service.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Portfolio Section */}
+      <section id="portfolio" className="py-16 md:py-20" aria-labelledby="portfolio-heading">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 id="portfolio-heading" className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Наши работы в Чебоксарах</h2>
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+              Реализованные проекты кухонь на заказ для жителей Чебоксар и Чувашской Республики
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+            {portfolioItems.map((item) => (
+              <div key={item.id} className="group cursor-pointer">
+                <div className="relative rounded-2xl overflow-hidden shadow-lg">
+                  <img 
+                    src={item.image} 
+                    alt={`${item.title} - ${item.description} от KITCHEN KING в Чебоксарах`}
+                    className="w-full h-64 md:h-80 object-cover transition-transform duration-500 group-hover:scale-110"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4 md:p-6">
+                    <div>
+                      <h3 className="text-white text-xl md:text-2xl font-bold mb-1 md:mb-2">{item.title}</h3>
+                      <p className="text-amber-200 text-sm md:text-base">{item.description}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-16 md:py-20 bg-gradient-to-br from-amber-50 to-white" aria-labelledby="contact-heading">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 id="contact-heading" className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Свяжитесь с нами в Чебоксарах</h2>
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+              Оставьте заявку и получите бесплатную консультацию с выездом замерщика по Чебоксарам
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-12">
+            <div className="space-y-6 md:space-y-8">
+              <div className="flex items-start space-x-3 md:space-x-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600 flex-shrink-0">
+                  <Phone className="w-5 h-5 md:w-6 md:h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-1">Телефон</h3>
+                  <p className="text-gray-600">+7 (917) 067-20-87</p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3 md:space-x-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600 flex-shrink-0">
+                  <Mail className="w-5 h-5 md:w-6 md:h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-1">Email</h3>
+                  <p className="text-gray-600">unredbooking@gmail.com</p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3 md:space-x-4">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600 flex-shrink-0">
+                  <MapPin className="w-5 h-5 md:w-6 md:h-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-1">Адрес</h3>
+                  <p className="text-gray-600">г. Чебоксары, ул. Складской проезд, д. 43</p>
+                </div>
+              </div>
+
+              <div className="bg-white p-4 md:p-6 rounded-2xl shadow-lg">
+                <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-3 md:mb-4">Режим работы</h3>
+                <div className="space-y-1 md:space-y-2 text-gray-600">
+                  <p>Пн-Пт: 9:00 - 20:00</p>
+                  <p>Сб-Вс: 10:00 - 18:00</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-6 md:p-8 rounded-2xl shadow-lg">
+              <form className="space-y-4 md:space-y-6">
+                <div>
+                  <label className="block text-gray-700 font-medium mb-2" htmlFor="name">Ваше имя</label>
+                  <input 
+                    id="name"
+                    type="text" 
+                    className="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                    placeholder="Введите ваше имя"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-medium mb-2" htmlFor="phone">Телефон</label>
+                  <input 
+                    id="phone"
+                    type="tel" 
+                    className="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                    placeholder="+7 (___) ___-__-__"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 font-medium mb-2" htmlFor="message">Сообщение</label>
+                  <textarea 
+                    id="message"
+                    rows="3"
+                    className="w-full px-3 py-2 md:px-4 md:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all"
+                    placeholder="Расскажите о вашем проекте кухни в Чебоксарах..."
+                    required
+                  ></textarea>
+                </div>
+                <button 
+                  type="submit"
+                  className="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 md:py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center space-x-2"
+                >
+                  <Send className="w-4 h-4 md:w-5 md:h-5" />
+                  <span>Отправить заявку</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-8 md:py-12" role="contentinfo">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="flex items-center justify-center space-x-2 mb-3 md:mb-4">
+              <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg" aria-hidden="true"></div>
+              <span className="text-lg md:text-xl font-bold">KITCHEN<span className="text-amber-400">KING</span></span>
+            </div>
+            <p className="text-gray-400 mb-3 md:mb-4">
+              Лучшие кухни на заказ в Чебоксарах и Чувашской Республике
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-6 text-gray-400 text-sm md:text-base">
+              <div className="flex items-center space-x-2">
+                <Phone className="w-3 h-3 md:w-4 md:h-4" />
+                <span>+7 (917) 067-20-87</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Mail className="w-3 h-3 md:w-4 md:h-4" />
+                <span>unredbooking@gmail.com</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <MapPin className="w-3 h-3 md:w-4 md:h-4" />
+                <span>Чебоксары, Складской проезд, 43</span>
+              </div>
+            </div>
+            <p className="text-gray-500 text-xs md:text-sm mt-4">
+              © {new Date().getFullYear()} KITCHEN KING. Все права защищены.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
